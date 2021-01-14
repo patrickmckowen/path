@@ -36,31 +36,36 @@ struct ProfileView: View {
         }
     }
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.width
+    
     var body: some View {
         ZStack {
             // NavBar
             VStack {
                 HStack {
                     Image(systemName: "chevron.left")
-                        .padding()
                         .onTapGesture {
                             presentationMode.wrappedValue.dismiss()
                         }
                     Spacer()
                 }
-                .padding()
+                .frame(height: 56)
+                .padding(.horizontal, 24)
                 Spacer()
             }
             
             // Stats
-            VStack(spacing: 16) {
-                HStack(alignment: .center, spacing: 56) {
+            VStack(spacing: 96) {
+                HStack {
                     Stat(number: Int(yogis.first?.currentStreak ?? 0), label: "Current Streak")
+                        .frame(width: screenWidth / 2)
                     Stat(number: Int(yogis.first?.longestStreak ?? 0), label: "Longest Streak")
+                        .frame(width: screenWidth / 2)
                 }
-                Divider().padding(.vertical)
-                HStack(alignment: .center, spacing: 96) {
+                HStack {
                     Stat(number: sessions.count, label: "Sessions")
+                        .frame(width: screenWidth / 2)
                     VStack {
                         Text("\(totalDuration, specifier: showMinutes ? "%.0f" : "%.1f")")
                             .font(.largeTitle)
@@ -68,10 +73,10 @@ struct ProfileView: View {
                             .font(.footnote)
                             .foregroundColor(.gray)
                     }
+                    .frame(width: screenWidth / 2)
                 }
   
             }
-            .padding()
             
         } // end ZStack
         .navigationBarHidden(true)

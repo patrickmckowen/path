@@ -10,6 +10,12 @@ import SwiftUI
 struct Navbar: View {
     @FetchRequest(entity: Yogi.entity(), sortDescriptors: [])
     var yogis: FetchedResults<Yogi>
+    var currentStreak: Int32 {
+        return yogis.first?.currentStreak ?? 0
+    }
+    var longestStreak: Int32 {
+        return yogis.first?.longestStreak ?? 0
+    }
     var body: some View {
         VStack {
             HStack {
@@ -17,15 +23,12 @@ struct Navbar: View {
                     destination: ProfileView(),
                     label: {
                         Image(systemName: "person.crop.circle")
-                            .font(.title3)
-                            .foregroundColor(.primary)
                     })
-                Text("\(yogis.first?.currentStreak ?? 0)")
-                    .foregroundColor(.primary)
                 Spacer()
             }
             .frame(height: 56)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 24)
+            .font(.title2)
             .foregroundColor(.black)
             
             Spacer()

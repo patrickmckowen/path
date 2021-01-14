@@ -14,10 +14,13 @@ struct TimerView: View {
     @FetchRequest(entity: Yogi.entity(), sortDescriptors: [])
     var yogis: FetchedResults<Yogi>
     @State private var showSheet = false
+    @State private var showPicker = false
     
     var body: some View {
         NavigationView {
             ZStack {
+                GradientSwirl()
+                
                 //Navbar
                 if timer.state == .off {
                     Navbar()
@@ -41,11 +44,36 @@ struct TimerView: View {
                 }
                 
                 // Play Button
-                PlayButton(duration: $duration)
+                StartButton(duration: $duration)
+                
+                // Selected Duration
+                Rectangle().fill(Color.black)
+                        .opacity(showPicker ? 0.7 : 0)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation(.default) {
+                                showPicker.toggle()
+                            }
+                        }
+                if timer.state == .off {
+                    VStack {
+                        Spacer()
+                        Text("\(duration / 60, specifier: "%.0f") minutes")
+                            .font(.system(size: 18, weight: .regular, design: .serif))
+                            .foregroundColor(.black)
+                            .padding(.bottom, 48)
+                            .onTapGesture {
+                                withAnimation(.default) {
+                                    showPicker.toggle()
+                                }
+                            }
+                    }
+                    .transition(.scale)
+                }
                 
                 // Duration Picker
-                if timer.state == .off {
-                    DurationPicker(selection: $duration)
+                if showPicker {
+                    DurationPicker(showPicker: $showPicker, selection: $duration)
                         .transition(.move(edge: .bottom))
                 }
                 
@@ -84,6 +112,6 @@ struct TimerView_Previews: PreviewProvider {
         TimerView()
             .environmentObject(MeditationTimer())
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-            .environment(\.colorScheme, .dark)
+            .environment(\.colorScheme, .light)
     }
 }
